@@ -1,11 +1,14 @@
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stock Predictor</title>
-    <link rel="stylesheet" href="mainPage.css"/>
+    <link rel="stylesheet" href="/static/mainPage.css" />
+    <script src="mainPage.js"></script>
 </head>
-<body class = "body">
+
+<body class="body">
     <!--Main Description-->
     <div id="description">
         Welcome to the Stock Predictor website. Here, you can search for
@@ -14,9 +17,19 @@
         Always consult with professional advice before making any investment decisions.
     </div>
     <!--Search Bar-->
-    <div class = "searchBar">
-        <input type="search" id="search" placeholder="Enter Company name or Stock Ticker">
-        <button id = "searchClick" onclick="searchFunction()">Search</button>
+    <form action="/" method="post">
+        <div class="searchBar">
+            <input type="search" id="search" placeholder="Enter Stock Ticker">
+            <button id="searchClick" type="submit">Search</button>
+        </div>
+    </form>
+    <!--Table that will display results-->
+    {% if prediction%}
+        <p>{{prediction}}</p>
+        <img src="{{ graph_url }}" alt = "Stock Performance">
+    {% endif %}
+    <div id="prediction">
+
     </div>
 </body>
 </html>

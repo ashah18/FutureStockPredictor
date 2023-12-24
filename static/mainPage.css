@@ -23,14 +23,14 @@
     margin-right: 200px;
     position: absolute;
     top: 0;
-    left: 42.5%;
+    left: 47.5%;
     transform: translateX(-50%);
     padding: 20px; /* Add padding for spacing if needed */
 }
 
 #search {
     padding: 10px;
-    width: 300px;
+    width: 200px;
     font-size: 15px;
     border: 1px solid #ccc;
     border-radius: 5px;
@@ -45,4 +45,8 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+#prediction{
+    align-items: center;
 }
