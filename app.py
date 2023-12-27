@@ -1,4 +1,4 @@
-from Flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request, send_file
 import yfinance as yf
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -11,13 +11,14 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 
 def getStockData(ticker, period = "1y"):
-    if(ticker.cont)
+    #if(yf.Ticker(ticker)==1):
     data = yf.download(ticker, period=period)
     return data
+    #return None
 def prepareData(data):
     data['Signal'] = np.where(data['Close'].shift(-1) > data['Close'], 1, 0)
-    features = stock_data[['Open', 'High', 'Low', 'Close', 'Volume']]
-    targets = stock_data['Signal']
+    features = data[['Open', 'High', 'Low', 'Close', 'Volume']]
+    targets = data['Signal']
     return features, targets
 
 def train_model(features, targets):
@@ -66,7 +67,8 @@ def plot_price_projection(model, features):
     plt.ylabel('Stock Price (USD)')
     plt.legend()
     plt.show()
-app = Flask(__name__)
+
+app = Flask(__name__, template_folder='template')
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -74,11 +76,11 @@ def index():
     graph_url = None
 
     if request.method == 'POST':
-        stock_input = request.form['stock_input'].upper()
+        stock_input = request.form['search'].upper()
 
         try:
-            stock_data = get_stock_data(stock_input, period="1y")
-            features, _ = prepare_data(stock_data)
+            stock_data = getStockData(stock_input, period="1y")
+            features, _ = prepareData(stock_data)
             model, _, _ = train_model(features, stock_data['Signal'])
 
             # Make stock price projection for the next month
@@ -110,11 +112,12 @@ def index():
             graph_url = f"data:image/png;base64,{buffer.getvalue().decode('utf-8')}"
 
             prediction = "Prediction: Buy" if prediction == 1 else "Prediction: Hold" if prediction == 0 else "Prediction: Sell"
-
+            return render_template('mainPage.html', prediction=prediction, graph_url=graph_url)
+        
         except Exception as e:
             print(f"Error fetching stock data: {e}")
 
-    return render_template('index.html', prediction=prediction, graph_url=graph_url)
+    return render_template("mainPage.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port = 5500)
